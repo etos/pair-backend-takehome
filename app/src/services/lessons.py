@@ -10,7 +10,7 @@ logging.basicConfig(level=conf.LOG_LEVEL)
 
 async def get_lesson(tenant_id: str, user_id: str, lesson_id: str) -> dict | None:
     """
-    Retrieve lesson.
+    Retrieve tenant > user > lesson.
 
     TODO: move db init to a central module
     TODO: remove wildcards in SQL
@@ -75,7 +75,6 @@ async def get_lesson(tenant_id: str, user_id: str, lesson_id: str) -> dict | Non
                     "id": r["variant_id"],
                     "tenant_id": r["variant_tenant_id"],
                     "data": r["variant_data"],
-                    "progress": r["progress_status"],
                 },
                 "user_progress": r["progress_status"],
             }
@@ -89,7 +88,7 @@ async def get_lesson(tenant_id: str, user_id: str, lesson_id: str) -> dict | Non
                 (str(r["block_id"]) for r in reversed(rows) if r["progress_status"]),
                 None,
             ),
-            "completed": "true" if all(s == "completed" for s in statuses) else "false",
+            "completed": True if all(s == "completed" for s in statuses) else False
         }
 
     }

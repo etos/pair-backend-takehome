@@ -18,28 +18,25 @@ class Variant(BaseModel):
     id: int = Field(...)
     tenant_id: int | None = None
     data: dict | None = None
-    progress: str | None = None
 
 class Block(BaseModel):
     id: int = Field(...)
     type: str | None = None
     position: int | None = None
     variant: Variant | None = None
+    user_progress: str | None = None
 
 class Progress(BaseModel):
     total_blocks: int | None = None
     seen_blocks: int | None = None
     completed_blocks: int | None = None
     last_seen_block_id: int | None = None
-    completed: str | None = "false"
+    completed: bool | None = False
 
-class Data(BaseModel):
+class Root(BaseModel):
     lesson: Lesson
     blocks: list[Block]
     progress_summary: Progress
-
-class Root(BaseModel):
-    data: Data
 
 
 @router.get(
@@ -64,4 +61,4 @@ async def get_lesson(
     if not data:
         raise HTTPException(status_code=404, detail="lesson not found.")
 
-    return {"data": data}
+    return data
