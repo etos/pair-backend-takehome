@@ -26,5 +26,5 @@ class AppConfig(BaseSettings):
     POSTGRES_DB: str = env.str("POSTGRES_DB")
     POSTGRES_URL: str = env.str(
         "POSTGRES_URL",
-        f"postgresql://{env.str('POSTGRES_USER')}:{env.str('POSTGRES_PASS')}@{env.str('POSTGRES_HOST')}:{env.int('POSTGRES_PORT', 5432)}/{env.str('POSTGRES_DB')}"
+        f"postgresql+asyncpg://{env.str('POSTGRES_USER')}:{env.str('POSTGRES_PASS')}@{env.str('POSTGRES_HOST')}:{env.int('POSTGRES_PORT', 5432)}/{env.str('POSTGRES_DB')}"
     )

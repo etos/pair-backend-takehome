@@ -23,3 +23,6 @@ app.add_middleware(
 
 app.include_router(api.health.router)
 
+app.include_router(api.v1.lessons.router)
+# app.include_router(api.v1.blocks.router)
+
