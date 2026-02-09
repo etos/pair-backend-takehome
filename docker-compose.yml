@@ -1,5 +1,4 @@
-version: "3.9"
-
+---
 services:
   db:
     image: postgres:16-alpine
@@ -10,14 +9,30 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./db:/docker-entrypoint-initdb.d:ro
+      - ./app/db:/docker-entrypoint-initdb.d:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U pair -d pair_takehome"]
       interval: 2s
       timeout: 3s
       retries: 30
 
-  # Optional: a lightweight DB browser at http://localhost:8081
+  app:
+    build:
+      context: ./app
+      target: dev
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - WAIT_HOSTS=db:5432
+      - WAIT_TIMEOUT=100
+    user: root
+    tty: true
+    volumes:
+      - ./app:/app
+    ports:
+      - 8000:8000
+
   adminer:
     image: adminer:4
     ports:

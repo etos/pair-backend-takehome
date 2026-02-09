@@ -1,0 +1,38 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = ""
+authors = []
+requires-python = ">=3.12,<4"
+
+dependencies = [
+    "requests>=2.31.0",
+    "fastapi[all]>=0.112.1",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest-dotenv>=0.5.2",
+    "pytest>=9.0.2",
+    "pytest-randomly>=4.0.1",
+    "pytest-mock>=3.15.1",
+    "pytest-xdist>=3.8.0",
+    "black>=26.1.0",
+    "pytest-env>=1.2.0",
+]
+
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+addopts = "-v"
+testpaths = [
+    "tests",
+]
+
+[tool.uv]
+cache-dir = "./.uv_cache"
+cache-keys = [{ file = "pyproject.toml" }, { git = true }]
+concurrent-downloads = 50

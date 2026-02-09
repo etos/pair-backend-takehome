@@ -1,2 +1,6 @@
 # Zone identifiers
 **/*:Zone.Identifier
+
+# OS generated
+ .DS_Store
+**/.DS_Store
