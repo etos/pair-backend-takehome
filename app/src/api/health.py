@@ -1,6 +1,4 @@
-import asyncio
 import logging
-from enum import Enum
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 # from src import services as svc
@@ -11,7 +9,11 @@ router = APIRouter()
 
 @router.get("/api/healthz")
 async def healthz():
-    """K8s health check."""
+    """health check.
+
+    TODO: implement liveness healthcheck for postgresql
+    TODO: implement correct response code
+    """
     checks = {
         "postgres": "OK", #svc.postgres.check_health(),
     }
