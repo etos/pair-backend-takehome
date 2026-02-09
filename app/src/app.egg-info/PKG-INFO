@@ -1,0 +1,16 @@
+Metadata-Version: 2.4
+Name: app
+Version: 0.1.0
+Requires-Python: <4,>=3.12
+Requires-Dist: requests>=2.31.0
+Requires-Dist: fastapi[all]>=0.112.1
+Requires-Dist: environs>=14.5.0
+Requires-Dist: pydantic>=2.12.5
+Provides-Extra: dev
+Requires-Dist: pytest-dotenv>=0.5.2; extra == "dev"
+Requires-Dist: pytest>=9.0.2; extra == "dev"
+Requires-Dist: pytest-randomly>=4.0.1; extra == "dev"
+Requires-Dist: pytest-mock>=3.15.1; extra == "dev"
+Requires-Dist: pytest-xdist>=3.8.0; extra == "dev"
+Requires-Dist: black>=26.1.0; extra == "dev"
+Requires-Dist: pytest-env>=1.2.0; extra == "dev"

@@ -1,6 +1,15 @@
 # Zone identifiers
 **/*:Zone.Identifier
 
+# Compiled source
+*.py[codt]
+__pycache__
+
 # OS generated
  .DS_Store
 **/.DS_Store
+
+# Package managers
+node_modules/
+.venv/
+app.egg-info/

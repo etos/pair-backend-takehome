@@ -3,9 +3,9 @@ set -ex
 
 runserver_dev() {
     # Dev Server Config
-    uvicorn src.main:app \
+    uv run uvicorn src.main:app \
         --host 0.0.0.0 \
-        --port 9000 \
+        --port 8000 \
         --workers 3 \
         --reload
 }
