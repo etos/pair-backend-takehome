@@ -1,10 +1,21 @@
 import logging
+from typing import Literal
 from fastapi import APIRouter, HTTPException, Path
 from pydantic import BaseModel, ConfigDict, Field
 from src import services as svc
 
 logging.captureWarnings(True)
 router = APIRouter()
+
+
+class ProgressUpsertRequest(BaseModel):
+    block_id: int = Field(...)
+    status: Literal["seen", "completed"] = Field(...)
+
+
+class ProgressUpsertResponse(BaseModel):
+    stored_status: Literal["seen", "completed"]
+    progress_summary: "Progress"
 
 
 class Lesson(BaseModel):
@@ -45,9 +56,9 @@ class Root(BaseModel):
     response_model_by_alias=False,
 )
 async def get_lesson(
-    tenant_id: str = Path(..., min_length=1),
-    user_id: str = Path(..., min_length=1),
-    lesson_id: str = Path(..., min_length=1),
+    tenant_id: int = Path(..., gt=0),
+    user_id: int = Path(..., gt=0),
+    lesson_id: int = Path(..., gt=0),
 ):
     """
     Retrieve lesson for a tenant -> user.
@@ -62,3 +73,35 @@ async def get_lesson(
         raise HTTPException(status_code=404, detail="lesson not found.")
 
     return data
+
+
+@router.put(
+    "/tenants/{tenant_id}/users/{user_id}/lessons/{lesson_id}/progress",
+    response_model=ProgressUpsertResponse,
+    response_model_by_alias=False,
+)
+async def upsert_progress(
+    body: ProgressUpsertRequest,
+    tenant_id: int = Path(..., gt=0),
+    user_id: int = Path(..., gt=0),
+    lesson_id: int = Path(..., gt=0),
+):
+    """
+    Upsert progress for a single block (idempotent).
+    Monotonic: completed cannot be downgraded to seen.
+    """
+    result = await svc.lessons.upsert_progress(
+        tenant_id=tenant_id,
+        user_id=user_id,
+        lesson_id=lesson_id,
+        block_id=body.block_id,
+        status=body.status,
+    )
+
+    if result is None:
+        raise HTTPException(status_code=404, detail="tenant, user, or lesson not found.")
+
+    if result.get("error") == "block_not_in_lesson":
+        raise HTTPException(status_code=400, detail="block_id not in lesson.")
+
+    return result
